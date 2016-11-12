@@ -1,0 +1,25 @@
+<html>
+<head>
+<h1 style="text-align:center;background-image:url('header.GIF'); color:orange"><b>Personalized Image Search</h1></font></b>
+<marquee behavior="scroll" direction="left" scrollamount="8"><img src="images.GIF" width="507" height="99" alt="Flying Bat" /></marquee>
+</head> 
+<body background="wp.gif">
+<p style=" margin-left:20px " ><font size="5"><font style="font:'MS Serif', 'New York', serif oblique" color="#000FFF">Search Results:
+<script language="javascript1.5">
+
+for (var i=1;i<9;i++)
+{
+	var a = document.createElement("img");
+	a.src = i+".jpg";
+	a.height = 290;
+	a.width = 425; 
+	document.write('&nbsp');
+	document.write('&nbsp');
+	
+	document.body.appendChild(a);
+	//document.write('<pre></pre>');
+	document.write('&nbsp');
+}
+</script>
+</body>
+</html>

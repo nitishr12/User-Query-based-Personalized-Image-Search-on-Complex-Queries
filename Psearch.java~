@@ -1,0 +1,201 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.applet.*;
+import java.io.*;
+import java.awt.image.BufferedImage;
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import javax.imageio.ImageIO;
+import org.python.util.PythonInterpreter;
+import org.python.core.*;
+/*
+ <applet code="Psearch" width=400 height=1000>
+ </applet>
+ */
+
+class sframe extends Frame //implements MouseListener
+{
+  int x=110,y=300,count=0;
+  Image[]im=new Image[20];
+  public sframe(String title)
+  {
+    super(title);
+   // addMouseListener(this);
+    MyWindowAdapter adapter=new MyWindowAdapter(this);
+    addWindowListener(adapter);
+  }
+  /*public void mouseClicked(MouseEvent me)
+  {
+    File f1=new File("C:\\Users\\sony\\Documents\\NetBeansProjects\\Searchpy\\src");
+    File[] matchingFiles = f1.listFiles(new FilenameFilter() {
+      public boolean accept(File f1, String name) {
+        return name.endsWith("jpg");}
+    });
+    count=matchingFiles.length;
+    im=new Image[count];
+    for(int i=0;i<count;i++)
+    {
+      try
+      {
+        BufferedImage originalImage = ImageIO.read(new File("C:\\Users\\sony\\Documents\\NetBeansProjects\\Searchpy\\src\\"+matchingFiles[i].getName()));
+        int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+        BufferedImage resizeImage = new BufferedImage(100, 100, type);
+        Graphics2D g = resizeImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, 100, 100, null);
+        g.dispose();
+        ImageIO.write(resizeImage, "jpg", new File("C:\\Users\\sony\\Documents\\NetBeansProjects\\Searchpy\\src\\"+matchingFiles[i].getName()));
+      }
+      catch(Exception e)
+      {}
+      im[i]=getImage(getDocumentBase(),matchingFiles[i].getName());  
+    }
+    repaint();
+  }
+  public void mouseExited(MouseEvent me)
+  {}
+  public void mouseEntered(MouseEvent me)
+  {}
+  public void mousePressed(MouseEvent me)
+  {}
+  public void mouseReleased(MouseEvent me)
+  {}
+  public void paint(Graphics g)
+  {
+    for(int i=0;i<count;i++)
+    {
+      g.drawImage(im[i] ,i*x,y,this);  
+    }
+  }*/ 
+}
+class MyWindowAdapter extends WindowAdapter
+{
+  sframe sf;
+  public MyWindowAdapter(sframe sf)
+  {
+    this.sf=sf;
+  }
+  public void WindowClosing(WindowEvent we)
+  {
+    sf.setVisible(false);
+  }
+}
+public class Psearch extends Applet implements ActionListener
+{
+  TextField text,a1;
+  List occ;
+  Image[]im=new Image[20];
+  int count=0,age=0,index=0,x=110,y=300;
+  String sq;
+  Frame f;
+  public void init()
+  {
+    Label header=new Label("Personalized Image Search on Queries based on user input", Label.RIGHT);
+    Label query=new Label("Query: ", Label.LEFT);
+    Label n=new Label("Name: ",Label.LEFT);
+    TextField n1=new TextField(12);
+    Label a=new Label("Age: ",Label.LEFT);
+    Label o=new Label("Qualification: ",Label.LEFT);
+    a1=new TextField(12);
+    occ=new List(6,false);
+    occ.add("School Student");
+    occ.add("IT/Computer Science");
+    occ.add("Mechanical/Aeronautical");
+    occ.add("Arts and Science/Literature");
+    occ.add("Illiterate");
+    occ.add("Law");
+    occ.add("Chemical/BioTechnology/Pharmaceutical");
+    occ.add("Music");
+    occ.add("Electronics/Electrical");
+    Button submit=new Button("Submit");
+    text=new TextField(12);
+    f=new sframe("Images");
+    f.setSize(1000,1000);
+    add(header);
+    add(n);
+    add(n1);
+    add(a);
+    add(a1);
+    add(o);
+    add(occ);
+    add(query);
+    add(text);
+    add(submit);
+    n1.addActionListener(this);
+    a1.addActionListener(this);
+    occ.addActionListener(this);
+    text.addActionListener(this);
+    submit.addActionListener(this);
+  }
+ public void actionPerformed(ActionEvent ae)
+ {
+   x++;
+   y++;
+   /*if(!a1.getText().equals(""))
+      age=Integer.parseInt(a1.getText());
+    else
+      age=0;
+    index=occ.getSelectedIndex()+1;
+    sq=Integer.toString(index);*/
+   if(!text.getText().equals(""))
+   {
+     try
+     {
+       File file = new File("C:\\Users\\sony\\Documents\\NetBeansProjects\\Searchpy\\src\\data.txt");
+       FileWriter fw = new FileWriter(file.getAbsoluteFile());
+       BufferedWriter bw = new BufferedWriter(fw);
+       bw.write(text.getText());
+       bw.close();
+       Process p = Runtime.getRuntime().exec("python searchpy.py");
+       BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+       BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+       String s = stdInput.readLine();
+       /*PythonInterpreter interpreter = new PythonInterpreter();
+       File src = new File("C:\\Users\\sony\\Documents\\NetBeansProjects\\Searchpy\\src\\searchpy.py");
+       FileInputStream is =new FileInputStream(src);
+       interpreter.execfile(is);
+       is.close();*/
+      /*interpreter.exec("from searchpy import srcq");
+       PyObject someFunc = interpreter.get("srcq");
+       //System.out.println(someFunc);
+       PyObject result = someFunc.__call__();
+       String realResult = (String) result.__tojava__(String.class);
+       //System.out.println(realResult);*/
+     }
+     catch(Exception e)
+     {}
+    f.setVisible(true);
+     File f1=new File("C:\\Users\\sony\\Documents\\NetBeansProjects\\Searchpy\\src");
+     File[] matchingFiles = f1.listFiles(new FilenameFilter() {
+       public boolean accept(File f1, String name) {
+         return name.endsWith("jpg");
+       }
+     });
+     count=matchingFiles.length;
+     im=new Image[count];
+     for(int i=0;i<count;i++)
+     {
+       try{
+         BufferedImage originalImage = ImageIO.read(new File("C:\\Users\\sony\\Documents\\NetBeansProjects\\Searchpy\\src\\"+matchingFiles[i].getName()));
+         int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+         BufferedImage resizeImage = new BufferedImage(100, 100, type);
+         Graphics2D g = resizeImage.createGraphics();
+         g.drawImage(originalImage, 0, 0, 100, 100, null);
+         g.dispose();
+         ImageIO.write(resizeImage, "jpg", new File("C:\\Users\\sony\\Documents\\NetBeansProjects\\Searchpy\\src\\"+matchingFiles[i].getName()));
+       }
+       catch(Exception e)
+       {}
+       im[i]=getImage(getDocumentBase(),matchingFiles[i].getName());   
+     }
+   }
+   repaint();
+ }
+ public void paint(Graphics g)
+ {
+   for(int i=0;i<count;i++)
+   {
+     g.drawImage(im[i] ,i*x,y,this);  
+    }
+ }
+}
